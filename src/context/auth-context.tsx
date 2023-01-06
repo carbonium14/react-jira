@@ -1,9 +1,20 @@
 import React, { ReactNode, useContext, useState } from "react"
 import * as auth from 'auth-provicer'
 import {User} from 'screens/project-list/search-panel'
+import { Http } from "utils/http"
+import { useMount } from "utils"
 interface AuthForm {
     username: string,
     password: string
+}
+const bootstrapUser = async () => {
+    let user = null
+    const token = auth.getToken()
+    if(token) {
+        const data = await Http('me',{token})
+        user=data.user
+    }
+    return user
 }
 const AuthContext = React.createContext<{
     user: User|null,
@@ -17,6 +28,7 @@ export const AuthProvider = ({children}:{children:ReactNode}) => {
     const login = (form:AuthForm) => auth.login(form).then(setUser)
     const register = (form:AuthForm) => auth.register(form).then(setUser)
     const logout = () => auth.logout().then(()=>setUser(null))
+    useMount(()=>bootstrapUser().then(setUser))
     return <AuthContext.Provider children={children} value={{user,login,register,logout}}></AuthContext.Provider>
 }
 export const useAuth = () => {
