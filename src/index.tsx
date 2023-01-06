@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from 'context/auth-context';
-// import {loadDevTools} from 'jira-dev-tool'
+// import {loadDevTools, Devtools} from 'jira-dev-tool'
 import 'antd/dist/antd.less'
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,6 +15,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <AuthProvider>
+      {/* <Devtools></Devtools> */}
       <App />
     </AuthProvider>
   </React.StrictMode>

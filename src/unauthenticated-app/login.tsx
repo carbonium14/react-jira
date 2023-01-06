@@ -2,7 +2,7 @@ import { useAuth } from "context/auth-context"
 import { Form, Input } from "antd"
 import { LongButton } from "unauthenticated-app"
 export const LoginScreen = () => {
-    const {login,user} = useAuth()
+    const {login} = useAuth()
     const handleSubmit=(values:{username:string,password:string})=>{
         login(values)
     }
