@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from 'context/auth-context';
 // import {loadDevTools} from 'jira-dev-tool'
+import 'antd/dist/antd.less'
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
