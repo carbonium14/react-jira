@@ -8,7 +8,7 @@ import { Typography } from "antd"
 import { useProjectSearchParams } from "./util"
 export const ProjectListScreen = () => {
     const [param,setParam] = useProjectSearchParams()
-    const {isLoading,error,data:list} = useProject(useDebounce(param,200))
+    const {isLoading,error,data:list,retry} = useProject(useDebounce(param,200))
     const {data:users} = useUsers()
     useDocumentTitle('项目列表',false)
     return (
@@ -16,7 +16,7 @@ export const ProjectListScreen = () => {
             <h1>项目列表</h1>
             <SearchPanel param={param} setParam={setParam} users={users||[]}></SearchPanel>
             {error?<Typography.Text type="danger">{error.message}</Typography.Text>:null}
-            <List loading={isLoading} dataSource={list||[]} users={users||[]}></List>
+            <List refresh={retry} loading={isLoading} dataSource={list||[]} users={users||[]}></List>
         </Container>
     )
 }
