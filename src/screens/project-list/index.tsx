@@ -6,21 +6,24 @@ import { useProject } from "utils/project"
 import { useUsers } from "utils/user"
 import { Typography } from "antd"
 import { useProjectSearchParams } from "./util"
-import { Row } from "components/lib"
-export const ProjectListScreen = (props:{projectButton:JSX.Element}) => {
+import { ButtonNoPadding, Row } from "components/lib"
+import { useDispatch } from "react-redux"
+import { ProjectListActions } from "./project-list.slice"
+export const ProjectListScreen = () => {
     const [param,setParam] = useProjectSearchParams()
     const {isLoading,error,data:list,retry} = useProject(useDebounce(param,200))
     const {data:users} = useUsers()
+    const dispatch = useDispatch()
     useDocumentTitle('项目列表',false)
     return (
         <Container>
             <Row between={true}>
                 <h1>项目列表</h1>
-                {props.projectButton}
+                <ButtonNoPadding onClick={()=>dispatch(ProjectListActions.openProjectModal())}></ButtonNoPadding>
             </Row>
             <SearchPanel param={param} setParam={setParam} users={users||[]}></SearchPanel>
             {error?<Typography.Text type="danger">{error.message}</Typography.Text>:null}
-            <List projectButton={props.projectButton} refresh={retry} loading={isLoading} dataSource={list||[]} users={users||[]}></List>
+            <List refresh={retry} loading={isLoading} dataSource={list||[]} users={users||[]}></List>
         </Container>
     )
 }
