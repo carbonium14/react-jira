@@ -1,5 +1,8 @@
 import styled from "@emotion/styled";
-import { Spin, Typography } from "antd";
+import { Button, Spin, Typography } from "antd";
+export const ButtonNoPadding = styled(Button)`
+    padding: 0;
+`
 const FullPage = styled.div`
     height: 100vh;
     display: flex;
