@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react"
+import { useCallback, useReducer, useState } from "react"
 import { useMountedRef } from "utils"
 
 interface state<D> {
@@ -14,24 +14,28 @@ const defaultInitialState:state<null> = {
     data: null,
     error: null
 }
+const useSafeDispatch=<T>(dispatch:(...args:T[])=>void)=>{
+    const mountedRef=useMountedRef()
+    return useCallback((...args:T[])=>(mountedRef.current?dispatch(...args):void(0)),[dispatch, mountedRef])
+}
 export const useAsync = <D>(initialState?:state<D>,initConfig?:typeof defaultConfig) => {
     const config = {...defaultConfig,...initConfig}
-    const [state,setState] = useState<state<D>>({
+    const [state,dispatch] = useReducer((state:state<D>,action:Partial<state<D>>)=>({...state,...action}),{
         ...defaultInitialState,
         ...initialState
     })
     const [retry,setRetry] = useState(()=>()=>{})
-    const mountedRef = useMountedRef()
-    const setData = useCallback((data:D) => setState({
+    const safeDispatch = useSafeDispatch(dispatch)
+    const setData = useCallback((data:D) => safeDispatch({
         data,
         status: 'success',
         error: null
-    }),[])
-    const setError = useCallback((error:Error) => setState({
+    }),[safeDispatch])
+    const setError = useCallback((error:Error) => safeDispatch({
         error,
         status: 'error',
         data: null
-    }),[])
+    }),[safeDispatch])
     const run = useCallback((promise:Promise<D>,runConfig?:{retry:()=>Promise<D>}) => {
         if(!promise||!promise.then) {
             throw new Error('请传入promise类型数据')
@@ -41,11 +45,9 @@ export const useAsync = <D>(initialState?:state<D>,initConfig?:typeof defaultCon
                 run(runConfig?.retry(),runConfig)
             }
         })
-        setState((preState)=>({...preState,status:'loading'}))
+        safeDispatch({status:'loading'})
         return promise.then(data=>{
-            if(mountedRef.current) {
-                setData(data)
-            }
+            setData(data)
             return data
         }).catch(error=>{
             setError(error)
@@ -55,7 +57,7 @@ export const useAsync = <D>(initialState?:state<D>,initConfig?:typeof defaultCon
                 return error
             }
         })
-    },[config.throwOnError, mountedRef, setData, setError])
+    },[config.throwOnError, safeDispatch, setData, setError])
     return {
         isIdle:state.status==='idle',
         isLoading:state.status==='loading',
