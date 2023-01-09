@@ -1,4 +1,4 @@
-import {User} from 'screens/project-list/search-panel'
+import {User} from 'types/user'
 const apiUrl = process.env.REACR_APP_API_URL
 const localStrogekey = '__auth_provider_token__'
 export const getToken = () => window.localStorage.getItem(localStrogekey)

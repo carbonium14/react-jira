@@ -3,18 +3,11 @@ import { ButtonNoPadding } from "components/lib"
 import { Pin } from "components/pin"
 import dayjs from "dayjs"
 import { Link } from "react-router-dom"
+import { Project } from "types/project"
 import { useDeleteProject, useEditProject } from "utils/project"
-import { User } from "./search-panel"
+import { User } from "types/user"
 import { useProjectModal, useProjectQueryKey } from "./util"
 
-export interface Project {
-    id: number,
-    name: string,
-    personId: number,
-    pin: boolean,
-    organization: string,
-    created: number
-}
 export interface ListProps extends TableProps<Project> {
     users: User[]
 }
