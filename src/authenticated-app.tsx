@@ -64,14 +64,13 @@ const Container =styled.div`
     grid-gap: 10rem;
 `
 const Header = styled(Row)`
-    grid-area: "header";
-`
-const HeaderLeft = styled(Row)`
     padding: 3.2rem;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
     z-index: 1;
 `
+const HeaderLeft = styled(Row)``
 const HeaderRight = styled.div``
 const Main = styled.main`
-    grid-area: "main";
+    display: flex;
+    overflow: hidden;
 `
