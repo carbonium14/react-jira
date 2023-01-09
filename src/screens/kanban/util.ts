@@ -1,6 +1,8 @@
-import { useMemo } from "react"
+import { useCallback, useMemo } from "react"
 import { useLocation } from "react-router"
+import { useDebounce } from "utils"
 import { useProject } from "utils/project"
+import { useTaskId } from "utils/task"
 import { useUrlQueryParam } from "utils/url"
 
 export const useProjectIdInUrl = () => {
@@ -12,19 +14,37 @@ export const useProjectInUrl = () => useProject(useProjectIdInUrl())
 export const useKanbanSearchParams = () => ({projectId:useProjectIdInUrl().id})
 export const useKanbansQueryKey = () => ['kanbans',useKanbanSearchParams()]
 export const useTasksSearchParams = () => {
-    const [param,setParam]=useUrlQueryParam([
+    const [param]=useUrlQueryParam([
         'name',
         'typeId',
         'processorId',
         'tagId'
     ])
     const projectId=useProjectIdInUrl().id
+    const debouncedName=useDebounce(param.name,200)
     return useMemo(()=>({
         projectId,
         typeId:Number(param.typeId)||undefined,
         processorId:Number(param.processorId)||undefined,
         tagId:Number(param.tagId)||undefined,
-        name:param.name
-    }),[projectId,param])
+        name:debouncedName
+    }),[projectId, param, debouncedName])
 }
 export const useTasksQueryKey = () => ['tasks',useTasksSearchParams()]
+export const useTasksModal = () => {
+    const [{editingTaskId},setEditingTaskId]=useUrlQueryParam(['editingTaskId'])
+    const {data:editingTask,isLoading}=useTaskId(Number(editingTaskId))
+    const startEdit=useCallback((id:number)=>{
+        setEditingTaskId({editingTaskId:id})
+    },[setEditingTaskId])
+    const close=useCallback(()=>{
+        setEditingTaskId({editingTaskId:''})
+    },[setEditingTaskId])
+    return {
+        editingTaskId,
+        editingTask,
+        startEdit,
+        close,
+        isLoading
+    }
+}
