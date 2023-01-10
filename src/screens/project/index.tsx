@@ -35,7 +35,7 @@ export const ProjectScreen = () => {
 const Container = styled.div`
     display: grid;
     grid-template-columns: 16rem 1fr;
-    overflow: hidden;
+    width: 100%;
 `
 const Aside = styled.aside`
     background-color: rgb(244,245,247);
