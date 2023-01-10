@@ -6,7 +6,7 @@ import { ButtonNoPadding } from "./lib"
 
 export const ProjectPopover = () => {
     const {open}=useProjectModal()
-    const {data:projects} = useProject()
+    const {data:projects,refetch} = useProject()
     const pinnedProjects = projects?.filter(project=>project.pin)
     const Content = <ContentContainer>
         <Typography.Text type="secondary">收藏项目</Typography.Text>
@@ -21,7 +21,7 @@ export const ProjectPopover = () => {
         <ButtonNoPadding type="link" onClick={open}></ButtonNoPadding>
     </ContentContainer>
     return (
-        <Popover placement="bottom" content={Content}>
+        <Popover onVisibleChange={()=>refetch()} placement="bottom" content={Content}>
             <span>项目</span>
         </Popover>
     )
