@@ -9,7 +9,7 @@ import right from 'assets/right.svg'
 import { useDocumentTitle } from "utils"
 import { ErrorBox } from "components/lib"
 
-export const UnAuthenticatedApp = () => {
+export default function UnAuthenticatedApp() {
     const [isRegister,setIsRegister] = useState(false)
     const [error,setError] = useState<Error|null>(null)
     useDocumentTitle('请登录注册以继续')

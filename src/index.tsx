@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from 'context/auth-context';
 // import {loadDevTools, Devtools} from 'jira-dev-tool'
 import 'antd/dist/antd.less'
+import { Profiler } from 'components/profiler';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
@@ -15,10 +16,12 @@ const root = ReactDOM.createRoot(
 // })
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      {/* <Devtools></Devtools> */}
-      <App />
-    </AuthProvider>
+    <Profiler id='Root App' phases={['mount']}>
+      <AuthProvider>
+        {/* <Devtools></Devtools> */}
+        <App />
+      </AuthProvider>
+    </Profiler>
   </React.StrictMode>
 );
 
